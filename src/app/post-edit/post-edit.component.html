@@ -1,3 +1,4 @@
+<!-- forms to create a new post -->
 <h1>Create Post</h1><br>
 <form [formGroup]="form" (ngSubmit)="onsubmit()">
     <div class="form-row">
@@ -8,6 +9,7 @@
       <div class="form-group col-md-6">
         <label for="image">Image</label>
         <input type="text" class="form-control" id="image" placeholder="" formControlName="imgPath">
+        <img src="{{form.value.imagPath}}" alt="image something">
       </div>
     </div>
     <div class="form-group col-md-10">

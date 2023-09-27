@@ -8,6 +8,7 @@ import { PostService } from '../post.service';
   styleUrls: ['./post.component.css']
 })
 
+
 export class PostComponent implements OnInit{
 @Input() index: number = 0;
 @Input() post?: Post;
