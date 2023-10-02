@@ -16,6 +16,7 @@ const routes: Routes = [
   {path: 'post-list', component: PostListComponent},
   {path: 'post-add', component: PostEditComponent},
   {path: 'authentication', component: AuthComponent},
+  {path: 'post-edit/:index', component: PostEditComponent},
 ]
 
 @NgModule({

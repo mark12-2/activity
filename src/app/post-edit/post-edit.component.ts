@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostService } from '../post.service';
 import { Post } from '../post.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-edit',
@@ -10,17 +10,46 @@ import { Router } from '@angular/router';
   styleUrls: ['./post-edit.component.css']
 })
 export class PostEditComponent {
+  //identifiers
   form!: FormGroup;
-  constructor(private postService:PostService, private route:Router){}
+  index: number = 0;
+  editMode = false;
+  
+  constructor(private postService:PostService, private route:Router, 
+    private actRoute: ActivatedRoute){}
 
   ngOnInit(): void{
+
+    // identifier for parameters
+let editTitle = "";
+let editDescription = "";
+let editImgPath = "";
+
+      this.actRoute.params.subscribe((params: Params) => {
+         if(params['index']){
+          console.log(params['index']);
+          this.index = params['index'];
+         
+          const post = this.postService.getSpecPost(this.index);
+
+          editTitle = post.title;
+          editDescription = post.description;
+          editImgPath = post.imgPath;
+          
+          this.editMode = true;
+
+        }
+      }
+      );
+
     this.form = new FormGroup({
-      title: new FormControl(null, [Validators.required]),
-      imgPath: new FormControl(null, [Validators.required]),
-      description: new FormControl(null, [Validators.required])
+      title: new FormControl(editTitle, [Validators.required]),
+      imgPath: new FormControl(editImgPath, [Validators.required]),
+      description: new FormControl(editDescription, [Validators.required])
      })
     }
 
+  //submit function  
     onsubmit(){
       const title = this.form.value.title;
       const imgPath = this.form.value.imgPath;
@@ -29,8 +58,12 @@ export class PostEditComponent {
       const post: Post = new Post(
         title, imgPath, description, '', new Date()
         );
+        if(this.editMode == true) {
+            this.postService.updatePost(this.index, post);
 
-        this.postService.addPost(post);
+          }else{
+            this.postService.addPost(post);
+          }
 
         this.route.navigate(['post-list']);
      }
